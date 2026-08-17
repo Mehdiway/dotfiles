@@ -25,7 +25,7 @@ fi
 log "Installing base packages"
 if command -v apt-get &>/dev/null; then
   $SUDO apt-get update -y
-  $SUDO apt-get install -y zsh tmux mosh git curl eza  # [CHANGED] added eza (was: zsh tmux mosh git curl)
+  $SUDO apt-get install -y zsh tmux mosh git curl eza
 elif command -v yum &>/dev/null; then
   $SUDO yum install -y zsh tmux mosh git curl
 elif command -v dnf &>/dev/null; then
@@ -55,21 +55,21 @@ log "Writing $ZSHRC"
 cat > "$ZSHRC" << 'EOF'
 # --- Keybindings ---
 bindkey -e   # [ADDED] emacs keybindings
-bindkey '^H' backward-kill-word    # [ADDED] Ctrl+Backspace-style word delete
-bindkey '^?' backward-delete-char  # [ADDED] normal backspace
+bindkey '^H' backward-kill-word
+bindkey '^?' backward-delete-char
 
 # --- Plugins ---
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-bindkey '^ ' autosuggest-accept   # Ctrl+Space to accept suggestion
+bindkey '^ ' autosuggest-accept
 
 # --- History ---
-HISTSIZE=1000                        # [CHANGED] was 10000, now matches your real config
-SAVEHIST=1000                        # [CHANGED] was 10000, now matches your real config
-HISTFILE=~/.zsh_history               # [ADDED]
-setopt HIST_IGNORE_ALL_DUPS SHARE_HISTORY   # [CHANGED] was HIST_IGNORE_DUPS (only dedupes consecutive dupes);
-                                             #           HIST_IGNORE_ALL_DUPS matches your real ~/.zshrc behavior
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+setopt HIST_IGNORE_ALL_DUPS SHARE_HISTORY
 
-# --- Completion system --- [ADDED block]
+
+# --- Completion system ---
 autoload -Uz compinit
 compinit
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -93,11 +93,11 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 export PATH="$HOME/.local/bin:$PATH"
 
 # --- Aliases ---
-alias cl=clear                       # [ADDED]
-alias ls='eza'                       # [CHANGED] now uses eza instead of default ls
-alias ll='eza -la'                   # [CHANGED] was 'ls -lah'
-alias l='eza -la'                    # [ADDED]
-alias lt='eza --tree'                # [ADDED]
+alias cl=clear
+alias ls='eza'
+alias ll='eza -la'
+alias l='eza -la'
+alias lt='eza --tree'
 alias gs='git status'
 alias gc='git commit -m'
 alias gp='git push'
@@ -109,7 +109,7 @@ alias ports='sudo ss -tulpn'
 # --- Prompt ---
 eval "$(starship init zsh)"
 
-# --- Start/attach to main tmux session --- [ADDED block]
+# --- Start/attach to main tmux session ---
 if command -v tmux >/dev/null 2>&1 && [ -z "${TMUX:-}" ] && [ -z "${SSH_TTY:-}" ]; then
     tmux attach-session -t main 2>/dev/null || tmux new-session -s main
 fi
@@ -118,19 +118,19 @@ EOF
 # --- 5. tmux config (Ctrl-a prefix) ---
 log "Writing $TMUX_CONF"
 cat > "$TMUX_CONF" << 'EOF'
-bind-key k confirm-before 'kill-window'   # [ADDED] confirm before killing a window
+bind-key k confirm-before 'kill-window'
 
 unbind C-b
 set -g prefix C-a
 bind C-a send-prefix
 
-set -g mouse off                          # [CHANGED] was 'on', now matches your real config
+set -g mouse off
 set -g history-limit 10000
 set -sg escape-time 0
 setw -g mode-keys vi
 
-unbind -T root WheelUpPane                # [ADDED]
-unbind -T root WheelDownPane              # [ADDED]
+unbind -T root WheelUpPane
+unbind -T root WheelDownPane
 EOF
 
 # --- 6. Default shell ---
